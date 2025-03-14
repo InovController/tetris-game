@@ -431,15 +431,6 @@ function loadGameState() {
 
 // Event listener para capturar teclas
 document.addEventListener('keydown', event => {
-    if (isPaused || isGameOver) {
-        if (event.key === 'p' || event.key === 'P' || (isGameOver && event.key === 'Enter')) {
-            // Permitir apenas a tecla de pausa ou Enter para reiniciar
-        } else {
-            event.preventDefault();
-            return;
-        }
-    }
-
     if (event.key === 'ArrowLeft') {
         event.preventDefault();
         playerMove(-1);
@@ -456,6 +447,15 @@ document.addEventListener('keydown', event => {
         event.preventDefault();
         playerRotate(1);
         saveGameState(); // Salva o estado após rotacionar
+    }
+    
+    if (isPaused || isGameOver) {
+        if (event.key === 'p' || event.key === 'P' || (isGameOver && event.key === 'Enter')) {
+            // Permitir apenas a tecla de pausa ou Enter para reiniciar
+        } else {
+            event.preventDefault();
+            return;
+        }
     }
 
     const pauseOverlay = document.getElementById('pause-overlay');
@@ -488,7 +488,7 @@ document.addEventListener('keydown', event => {
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         // A guia está ativa, retome a música
-        if (!isGameOver && !backgroundMusic.playing) {
+        if (backgroundMusic.paused) {
             backgroundMusic.play();
         }
     } else {
@@ -507,8 +507,10 @@ Object.defineProperty(backgroundMusic, 'playing', {
 // Atualize a barra de progresso
 function updateProgressBar() {
     const progressBar = document.getElementById('progress-bar');
-    const progress = (backgroundMusic.currentTime / backgroundMusic.duration) * 100;
-    progressBar.style.width = `${progress}%`;
+    if (backgroundMusic && backgroundMusic.duration > 0) {
+        const progress = (backgroundMusic.currentTime / backgroundMusic.duration) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
 }
 
 // Atualize a barra de progresso em tempo real

@@ -198,7 +198,7 @@ h2 {
     width: 0%;
     height: 100%;
     background-color: #88c0d0; /* Azul claro */
-    transition: width 0.3s ease;
+    transition: width 0.1s linear;
 }
 
 /* Tela de pausa */
