@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Game</title>
+    <link rel="stylesheet" href="src/styles/style.css">
+</head>
+<body>
+    <h1 id="game-title">Tetris Lofi</h1>
+    <div id="game-container">
+        <!-- Canvas principal do jogo -->
+        <canvas id="tetris" width="300" height="600"></canvas>
+        
+        <!-- Informações adicionais ao lado -->
+        <div style="text-align: center;">
+            <h2>Next Piece</h2>
+            <canvas id="next" width="120" height="120"></canvas>
+            
+            <h2>Score</h2>
+            <div id="score">0</div>
+
+            <h2>High Score</h2>
+            <div id="high-score">0</div>
+        </div>
+    </div>
+    <div id="instructions">
+        <h3>Controles</h3>
+        <ul>
+            <li><strong>P</strong>: Pausar o jogo</li>
+            <li><strong>R</strong>: Reiniciar o jogo</li>
+            <li><strong>Espaço</strong>: Girar a peça</li>
+            <li><strong>Seta para baixo</strong>: Acelerar a queda</li>
+            <li><strong>Setas para os lados</strong>: Mover a peça</li>
+        </ul>
+    </div>
+    <div id="music-info">
+        🎵 Tocando agora: <span id="music-title">Lofi Relaxing Beats</span>
+    </div>
+    <div id="game-over" style="display: none;">
+        <h2>Game Over</h2>
+        <p>Sua pontuação final: <span id="final-score">0</span></p>
+        <p>Pressione <strong>Enter</strong> para jogar novamente!</p>
+    </div>
+    <script src="src/scripts/utils.js"></script>
+    <script src="src/scripts/game.js"></script>
+</body>
+</html>

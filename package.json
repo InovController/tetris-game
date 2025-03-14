@@ -1,0 +1,21 @@
+{
+  "name": "tetris-game",
+  "version": "1.0.0",
+  "description": "A simple Tetris game implemented in JavaScript.",
+  "main": "src/scripts/game.js",
+  "scripts": {
+    "start": "live-server src",
+    "build": "echo 'Build step not defined'"
+  },
+  "keywords": [
+    "tetris",
+    "game",
+    "javascript"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

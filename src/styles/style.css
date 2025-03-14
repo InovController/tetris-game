@@ -1,0 +1,164 @@
+/* Fundo geral */
+body {
+    margin: 0; /* Remove qualquer margem padrão */
+    padding: 0; /* Remove qualquer padding padrão */
+    background-color: #2e3440; /* Fundo escuro e suave */
+    color: #d8dee9; /* Texto claro */
+    font-family: 'Poppins', Arial, sans-serif; /* Fonte moderna e relaxante */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Título */
+h1 {
+    margin: 0; /* Remove a margem padrão do título */
+    padding: 10px 0; /* Adicione um pequeno padding para espaçamento */
+    font-size: 36px;
+    color: #88c0d0; /* Azul suave */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+}
+
+/* Estilo para o título do jogo */
+#game-title {
+    font-size: 24px; /* Tamanho menor para ser discreto */
+    color: #81a1c1; /* Azul claro suave */
+    text-align: center;
+    margin-bottom: 10px; /* Espaço sutil abaixo do título */
+    font-family: 'Poppins', Arial, sans-serif; /* Fonte moderna e relaxante */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Sombra suave */
+    opacity: 0.8; /* Torna o título mais discreto */
+}
+
+/* Container principal */
+#game-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 30px;
+    background-color: #3b4252; /* Fundo do container */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+}
+
+/* Canvas principal */
+canvas {
+    border: 2px solid #88c0d0; /* Borda azul suave */
+    background-color: #2e3440; /* Fundo escuro */
+    border-radius: 5px;
+}
+
+/* Placar e informações */
+h2 {
+    font-size: 20px;
+    color: #81a1c1; /* Azul claro */
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+}
+
+#score, #high-score {
+    font-size: 24px;
+    color: #eceff4; /* Texto claro */
+    background-color: #4c566a; /* Fundo escuro */
+    padding: 10px;
+    border: 2px solid #81a1c1; /* Borda azul claro */
+    border-radius: 5px;
+    text-align: center;
+    width: 120px;
+    margin: 10px auto;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+}
+
+/* Tela de Game Over */
+#game-over {
+    font-size: 20px;
+    color: #bf616a; /* Vermelho suave */
+    text-align: center;
+    background-color: #3b4252; /* Fundo escuro */
+    padding: 20px;
+    border: 2px solid #bf616a; /* Borda vermelha */
+    border-radius: 10px;
+    display: none; /* Escondido por padrão */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+}
+
+#game-over p {
+    font-size: 16px;
+}
+
+/* Botão de reset (se necessário) */
+#reset-button {
+    padding: 10px 20px;
+    background-color: #a3be8c; /* Verde suave */
+    color: #2e3440; /* Texto escuro */
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+}
+
+#reset-button:hover {
+    background-color: #8fbc8f; /* Tom mais claro ao passar o mouse */
+}
+
+/* Estilo para a seção de instruções */
+#instructions {
+    position: fixed; /* Fixa no canto da tela */
+    bottom: 50px; /* Distância da parte inferior */
+    right: 30px; /* Distância da lateral direita */
+    background-color: rgba(59, 66, 82, 0.9); /* Fundo escuro com transparência */
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 200px;
+    color: #d8dee9; /* Texto claro */
+}
+
+#instructions h3 {
+    font-size: 16px;
+    color: #a3be8c; /* Verde suave */
+    margin-bottom: 8px;
+}
+
+#instructions ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+#instructions li {
+    margin: 4px 0;
+}
+
+/* Faixa de música tocando */
+#music-info {
+    position: fixed; /* Fixa na parte inferior da tela */
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Ocupa toda a largura da tela */
+    background-color: rgba(40, 42, 54, 0.95); /* Fundo escuro com transparência */
+    color: #a3be8c; /* Texto verde suave */
+    font-size: 16px;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+    font-family: 'Poppins', Arial, sans-serif; /* Fonte relaxante */
+    z-index: 100; /* Garante que fique acima de outros elementos */
+}
+
+#music-info span {
+    font-weight: bold; /* Destaque para o título da música */
+}
