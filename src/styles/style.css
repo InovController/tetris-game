@@ -115,7 +115,7 @@ h2 {
 /* Estilo para a seção de instruções */
 #instructions {
     position: fixed; /* Fixa no canto da tela */
-    bottom: 60px; /* Distância da parte inferior */
+    bottom: 70px; /* Distância da parte inferior */
     right: 10px; /* Distância da lateral direita */
     background-color: rgba(59, 66, 82, 0.9); /* Fundo escuro com transparência */
     padding: 20px 30px;
