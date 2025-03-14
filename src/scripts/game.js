@@ -54,13 +54,37 @@ const rotateSound = new Audio('src/sounds/rotate-block.mp3');
 const lineClearSound = new Audio('src/sounds/lineclear.wav');
 const gameOverSound = new Audio('src/sounds/game-over-song.wav');
 const blockHitSound = new Audio('src/sounds/block-hit.wav');
-const backgroundMusic = new Audio('src/sounds/background.wav');
-backgroundMusic.loop = true; // Faz a música tocar em loop
-backgroundMusic.volume = 0.5; // Ajusta o volume (opcional)
+
+const playlist = [
+    { src: 'src/sounds/Boomopera - LoFied (Full Length).mp3', title: 'Boomopera - LoFied' },
+    { src: 'src/sounds/LoFi (full version).mp3', title: 'Lofi Chill Vibes' },
+    { src: 'src/sounds/Lofi.wav', title: 'Lofi Study Session' },
+    { src: 'src/sounds/raspberrymusic - LoFi.mp3', title: 'raspberrymusic - LoFi' },
+    { src: 'src/sounds/That Lofi .mp3', title: 'That Lofi ' },
+];
+
+let currentTrackIndex = 0; // Índice da música atual
+const backgroundMusic = new Audio(playlist[currentTrackIndex].src);
+backgroundMusic.loop = false; // Desative o loop para alternar entre músicas
+backgroundMusic.volume = 0.5; // Ajuste o volume
 
 // Atualize o título da música
 const musicTitleElement = document.getElementById('music-title');
-musicTitleElement.innerText = 'Lofi Relaxing Beats'; // Nome da música
+musicTitleElement.innerText = playlist[currentTrackIndex].title;
+
+// Função para tocar a próxima música
+function playNextTrack() {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length; // Avança para a próxima música (volta ao início se for a última)
+    backgroundMusic.src = playlist[currentTrackIndex].src; // Atualiza a fonte da música
+    musicTitleElement.innerText = playlist[currentTrackIndex].title; // Atualiza o título
+    backgroundMusic.play(); // Toca a próxima música
+}
+
+// Evento para detectar quando a música termina
+backgroundMusic.addEventListener('ended', playNextTrack);
+
+// Inicie a reprodução da primeira música
+backgroundMusic.play();
 
 // Função para criar a arena (matriz 2D)
 function createMatrix(width, height) {
@@ -341,14 +365,14 @@ function updateScore() {
 
 // Função para reiniciar o jogo
 function restartGame() {
-    isGameOver = false; // Reseta o estado de Game Over
-    gameOverElement.style.display = 'none'; // Esconde a tela de Game Over
-    arena.forEach(row => row.fill(0)); // Limpa a arena
-    player.score = 0; // Reseta a pontuação
-    updateScore(); // Atualiza o placar
-    playerReset(); // Reinicia o jogador
-
-    update(); // Reinicia o loop de atualização
+    isGameOver = false;
+    gameOverElement.style.display = 'none';
+    arena.forEach(row => row.fill(0));
+    player.score = 0;
+    updateScore();
+    playerReset();
+    localStorage.removeItem('tetrisGameState'); // Remove o estado salvo
+    update();
 }
 
 // Função para obter o deslocamento inicial Y de uma matriz
@@ -372,42 +396,94 @@ function drawGhostPiece() {
     drawMatrix(player.matrix, ghostPos, context, 'rgba(255, 255, 255, 0.3)'); // Desenhe a peça fantasma com transparência
 }
 
+// Função para salvar o estado do jogo
+function saveGameState() {
+    const gameState = {
+        arena: arena,
+        player: player,
+        nextPiece: nextPiece,
+        score: player.score,
+        isPaused: isPaused,
+    };
+    localStorage.setItem('tetrisGameState', JSON.stringify(gameState));
+}
+
+// Função para carregar o estado do jogo
+function loadGameState() {
+    const savedState = localStorage.getItem('tetrisGameState');
+    if (savedState) {
+        const gameState = JSON.parse(savedState);
+        arena.forEach((row, y) => row.fill(0)); // Limpa a arena
+        gameState.arena.forEach((row, y) => {
+            arena[y] = [...row]; // Restaura a arena
+        });
+        player.pos = { ...gameState.player.pos };
+        player.matrix = gameState.player.matrix;
+        player.score = gameState.score;
+        nextPiece = gameState.nextPiece;
+        isPaused = gameState.isPaused;
+
+        updateScore(); // Atualiza o placar
+        draw(); // Redesenha o jogo
+        drawNextPiece(); // Redesenha a próxima peça
+    }
+}
+
 // Event listener para capturar teclas
 document.addEventListener('keydown', event => {
-    if (!isGameOver) {
-        if (event.key === 'ArrowLeft') {
-            playerMove(-1);
-        } else if (event.key === 'ArrowRight') {
-            playerMove(1);
-        } else if (event.key === 'ArrowDown') {
-            playerDrop();
-        } else if (event.key === ' ') {
-            playerRotate(1);
+    if (isPaused || isGameOver) {
+        if (event.key === 'p' || event.key === 'P' || (isGameOver && event.key === 'Enter')) {
+            // Permitir apenas a tecla de pausa ou Enter para reiniciar
+        } else {
+            event.preventDefault();
+            return;
         }
     }
 
+    if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        playerMove(-1);
+        saveGameState(); // Salva o estado após mover
+    } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        playerMove(1);
+        saveGameState(); // Salva o estado após mover
+    } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        playerDrop();
+        saveGameState(); // Salva o estado após a queda
+    } else if (event.key === ' ') {
+        event.preventDefault();
+        playerRotate(1);
+        saveGameState(); // Salva o estado após rotacionar
+    }
+
+    const pauseOverlay = document.getElementById('pause-overlay');
     if (event.key === 'p' || event.key === 'P') {
-        isPaused = !isPaused; // Alterna entre pausado e não pausado
+        event.preventDefault();
+        isPaused = !isPaused;
         if (!isPaused) {
-            lastTime = performance.now(); // Reseta o tempo para evitar saltos
-            update(); // Retoma o loop de atualização
+            pauseOverlay.style.display = 'none';
+            backgroundMusic.play();
+            lastTime = performance.now();
+            update();
+        } else {
+            pauseOverlay.style.display = 'flex';
+            backgroundMusic.pause();
         }
+        saveGameState(); // Salva o estado ao pausar ou retomar
     }
 
     if (event.key === 'r' || event.key === 'R') {
+        event.preventDefault(); // Impede o comportamento padrão
         restartGame(); // Reinicia o jogo ao pressionar R
     }
 
     if (isGameOver && event.key === 'Enter') {
+        event.preventDefault(); // Impede o comportamento padrão
         restartGame(); // Reinicia o jogo ao pressionar Enter após Game Over
     }
 });
-
-document.addEventListener('click', () => {
-    if (!backgroundMusic.playing) {
-        backgroundMusic.play();
-    }
-}, { once: true }); // O evento será executado apenas uma vez
 
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
@@ -427,6 +503,56 @@ Object.defineProperty(backgroundMusic, 'playing', {
         return !this.paused && !this.ended;
     }
 });
+
+// Atualize a barra de progresso
+function updateProgressBar() {
+    const progressBar = document.getElementById('progress-bar');
+    const progress = (backgroundMusic.currentTime / backgroundMusic.duration) * 100;
+    progressBar.style.width = `${progress}%`;
+}
+
+// Atualize a barra de progresso em tempo real
+backgroundMusic.addEventListener('timeupdate', updateProgressBar);
+
+// Reinicie a barra de progresso ao trocar de música
+backgroundMusic.addEventListener('ended', () => {
+    updateProgressBar(); // Atualiza para 100% antes de trocar
+    playNextTrack(); // Toca a próxima música
+});
+
+// Botões de controle
+document.getElementById('prev-track').addEventListener('click', () => {
+    currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length; // Volta para a música anterior
+    backgroundMusic.src = playlist[currentTrackIndex].src;
+    musicTitleElement.innerText = playlist[currentTrackIndex].title;
+    backgroundMusic.play();
+    updateProgressBar(); // Reinicia a barra de progresso
+});
+
+document.getElementById('next-track').addEventListener('click', () => {
+    playNextTrack();
+    updateProgressBar(); // Reinicia a barra de progresso
+});
+
+// Prepare a música para tocar assim que a página carregar
+document.addEventListener('DOMContentLoaded', () => {
+    loadGameState(); // Carrega o estado salvo
+    backgroundMusic.load(); // Carrega a música
+});
+
+// Detecta a interação do usuário para iniciar a música
+document.addEventListener('click', () => {
+    if (!isPaused && backgroundMusic.paused) {
+        backgroundMusic.play(); // Inicia a música se o jogo não estiver pausado
+    }
+}, { once: true }); // O evento será executado apenas uma vez
+
+// Detecta a interação do usuário para iniciar a música ao pressionar uma tecla
+document.addEventListener('keydown', () => {
+    if (!isPaused && backgroundMusic.paused) {
+        backgroundMusic.play(); // Inicia a música se o jogo não estiver pausado
+    }
+}, { once: true }); // O evento será executado apenas uma vez
 
 playerReset();
 backgroundMusic.play(); // Inicia a música ambiente

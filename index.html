@@ -35,12 +35,18 @@
         </ul>
     </div>
     <div id="music-info">
+        <button id="prev-track">⏮️</button>
         🎵 Tocando agora: <span id="music-title">Lofi Relaxing Beats</span>
+        <button id="next-track">⏭️</button>
     </div>
     <div id="game-over" style="display: none;">
         <h2>Game Over</h2>
         <p>Sua pontuação final: <span id="final-score">0</span></p>
         <p>Pressione <strong>Enter</strong> para jogar novamente!</p>
+    </div>
+    <div id="pause-overlay" style="display: none;">
+        <h2>Jogo Pausado</h2>
+        <p>Pressione <strong>P</strong> para continuar</p>
     </div>
     <script src="src/scripts/utils.js"></script>
     <script src="src/scripts/game.js"></script>

@@ -38,7 +38,7 @@ h1 {
     align-items: flex-start;
     justify-content: center;
     gap: 20px;
-    padding: 20px 30px;
+    padding: 30px 30px;
     background-color: #3b4252; /* Fundo do container */
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
@@ -115,8 +115,8 @@ h2 {
 /* Estilo para a seção de instruções */
 #instructions {
     position: fixed; /* Fixa no canto da tela */
-    bottom: 50px; /* Distância da parte inferior */
-    right: 30px; /* Distância da lateral direita */
+    bottom: 60px; /* Distância da parte inferior */
+    right: 10px; /* Distância da lateral direita */
     background-color: rgba(59, 66, 82, 0.9); /* Fundo escuro com transparência */
     padding: 20px 30px;
     border-radius: 8px;
@@ -150,7 +150,7 @@ h2 {
     left: 0;
     width: 100%; /* Ocupa toda a largura da tela */
     background-color: rgba(40, 42, 54, 0.95); /* Fundo escuro com transparência */
-    color: #a3be8c; /* Texto verde suave */
+    color: #d8dee9; /* Texto claro */
     font-size: 16px;
     text-align: center;
     padding: 10px 0;
@@ -161,4 +161,71 @@ h2 {
 
 #music-info span {
     font-weight: bold; /* Destaque para o título da música */
+}
+
+#music-info button {
+    background-color: transparent; /* Fundo transparente */
+    border: none; /* Remove bordas */
+    color: #a3be8c; /* Verde suave */
+    font-size: 14px; /* Tamanho menor */
+    cursor: pointer;
+    margin: 0 5px;
+    padding: 5px;
+    transition: color 0.3s ease, transform 0.2s ease; /* Transição suave */
+}
+
+#music-info button:hover {
+    color: #88c0d0; /* Azul claro ao passar o mouse */
+    transform: scale(1.1); /* Leve aumento ao passar o mouse */
+}
+
+#music-info button:active {
+    transform: scale(0.9); /* Leve redução ao clicar */
+}
+
+/* Barra de progresso */
+#progress-bar-container {
+    position: relative;
+    width: 90%;
+    height: 5px;
+    background-color: #4c566a; /* Fundo escuro */
+    margin: 10px auto 0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #88c0d0; /* Azul claro */
+    transition: width 0.3s ease;
+}
+
+/* Tela de pausa */
+#pause-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo semitransparente */
+    color: #d8dee9; /* Texto claro */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 200; /* Acima de todos os outros elementos */
+    font-family: 'Poppins', Arial, sans-serif; /* Fonte relaxante */
+    text-align: center;
+}
+
+#pause-overlay h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #88c0d0; /* Azul suave */
+}
+
+#pause-overlay p {
+    font-size: 18px;
+    color: #a3be8c; /* Verde suave */
 }
