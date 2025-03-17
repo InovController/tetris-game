@@ -229,3 +229,84 @@ h2 {
     font-size: 18px;
     color: #a3be8c; /* Verde suave */
 }
+
+/* Estilo para o controle de volume */
+#volume-control {
+    width: 100px; /* Largura do controle */
+    margin-top: 5px; /* Espaçamento acima */
+    appearance: none; /* Remove o estilo padrão do navegador */
+    background: #4c566a; /* Fundo escuro */
+    border-radius: 5px;
+    height: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+#volume-control::-webkit-slider-thumb {
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    background: #88c0d0; /* Azul claro */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#volume-control::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    background: #88c0d0; /* Azul claro */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Estilo para o botão de volume */
+#volume-container {
+    display: inline-block;
+    position: relative;
+}
+
+#volume-button {
+    background-color: transparent;
+    border: none;
+    color: #a3be8c; /* Verde suave */
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+#volume-button:hover {
+    color: #88c0d0; /* Azul claro ao passar o mouse */
+    transform: scale(1.1); /* Leve aumento ao passar o mouse */
+}
+
+#volume-control {
+    position: absolute;
+    top: -30px; /* Posicione acima do botão */
+    left: 0;
+    width: 100px; /* Largura do controle */
+    appearance: none; /* Remove o estilo padrão do navegador */
+    background: #4c566a; /* Fundo escuro */
+    border-radius: 5px;
+    height: 5px;
+    outline: none;
+    cursor: pointer;
+    display: none; /* Oculto por padrão */
+}
+
+#volume-control::-webkit-slider-thumb {
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    background: #88c0d0; /* Azul claro */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#volume-control::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    background: #88c0d0; /* Azul claro */
+    border-radius: 50%;
+    cursor: pointer;
+}

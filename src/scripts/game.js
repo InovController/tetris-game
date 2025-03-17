@@ -402,8 +402,11 @@ function drawGhostPiece() {
 
 // Função para salvar o estado do jogo
 function saveGameState() {
+    // Crie uma cópia da arena e substitua valores -1 por 0
+    const cleanedArena = arena.map(row => row.map(value => (value === -1 ? 0 : value)));
+
     const gameState = {
-        arena: arena,
+        arena: cleanedArena, // Use a arena limpa
         player: player,
         nextPiece: nextPiece,
         score: player.score,
@@ -417,10 +420,12 @@ function loadGameState() {
     const savedState = localStorage.getItem('tetrisGameState');
     if (savedState) {
         const gameState = JSON.parse(savedState);
-        arena.forEach((row, y) => row.fill(0)); // Limpa a arena
+
+        // Limpe quaisquer valores -1 na arena carregada
         gameState.arena.forEach((row, y) => {
-            arena[y] = [...row]; // Restaura a arena
+            arena[y] = row.map(value => (value === -1 ? 0 : value));
         });
+
         player.pos = { ...gameState.player.pos };
         player.matrix = gameState.player.matrix;
         player.score = gameState.score;
@@ -559,6 +564,68 @@ document.addEventListener('keydown', () => {
         backgroundMusic.play(); // Inicia a música se o jogo não estiver pausado
     }
 }, { once: true }); // O evento será executado apenas uma vez
+
+// Referências ao botão de volume e ao controle deslizante
+const volumeButton = document.getElementById('volume-button');
+const volumeControl = document.getElementById('volume-control');
+
+// Restaure o volume salvo no localStorage ao carregar a página
+const savedVolume = localStorage.getItem('backgroundMusicVolume');
+if (savedVolume !== null) {
+    backgroundMusic.volume = parseFloat(savedVolume); // Restaura o volume da música
+    volumeControl.value = savedVolume; // Atualiza o controle deslizante
+updateVolumeIcon(savedVolume); // Atualiza o emoji do botão de volume
+}
+
+// Alternar a exibição do controle de volume ao clicar no botão
+volumeButton.addEventListener('click', () => {
+    if (volumeControl.style.display === 'none') {
+        volumeControl.style.display = 'block'; // Exibe o controle
+    } else {
+        volumeControl.style.display = 'none'; // Oculta o controle
+    }
+});
+
+// Atualize o volume da música quando o controle for ajustado
+volumeControl.addEventListener('input', () => {
+    const volume = volumeControl.value;
+    backgroundMusic.volume = volume; // Define o volume da música
+    localStorage.setItem('backgroundMusicVolume', volume); // Salva o volume no localStorage
+    updateVolumeIcon(volume); // Atualiza o emoji do botão de volume
+});
+
+// Função para atualizar o emoji do botão de volume
+function updateVolumeIcon(volume) {
+    if (volume == 0) {
+        volumeButton.textContent = '🔇'; // Mudo
+    } else if (volume > 0 && volume <= 0.3) {
+        volumeButton.textContent = '🔈'; // Volume baixo
+    } else if (volume > 0.3 && volume <= 0.7) {
+        volumeButton.textContent = '🔉'; // Volume médio
+    } else {
+        volumeButton.textContent = '🔊'; // Volume alto
+    }
+};
+
+// Salve o índice da música atual e o tempo atual no localStorage ao sair ou recarregar a página
+window.addEventListener('beforeunload', () => {
+    localStorage.setItem('backgroundMusicTime', backgroundMusic.currentTime); // Salva o tempo atual
+    localStorage.setItem('currentTrackIndex', currentTrackIndex); // Salva o índice da música atual
+});
+
+// Restaure o índice da música e o tempo ao carregar a página
+const savedTrackIndex = localStorage.getItem('currentTrackIndex');
+const savedMusicTime = localStorage.getItem('backgroundMusicTime');
+
+if (savedTrackIndex !== null) {
+    currentTrackIndex = parseInt(savedTrackIndex, 10); // Restaura o índice da música
+    backgroundMusic.src = playlist[currentTrackIndex].src; // Atualiza a música
+    musicTitleElement.innerText = playlist[currentTrackIndex].title; // Atualiza o título
+}
+
+if (savedMusicTime !== null) {
+    backgroundMusic.currentTime = parseFloat(savedMusicTime); // Restaura o tempo salvo
+}
 
 playerReset();
 backgroundMusic.play(); // Inicia a música ambiente
