@@ -45,6 +45,7 @@ let lastTime = 0;
 let highScore = 0;
 let isGameOver = false; // Indica se o jogo está em estado de Game Over
 let isPaused = false;
+let isRemovingLines = false; // Variável para indicar se as linhas estão sendo removidas
 
 // Carregar o High Score do localStorage
 highScore = localStorage.getItem('highScore') || 0; // Use 0 se não houver High Score salvo
@@ -172,7 +173,7 @@ function merge(arena, player) {
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                arena[y + player.pos.y][x + player.pos.x] = value;
+                arena[y + player.pos.y][x + player.pos.x] = value; // Mescla o valor do bloco à arena
             }
         });
     });
@@ -194,8 +195,7 @@ function collide(arena, player) {
 
 // Função para remover linhas completas e atualizar a velocidade da gravidade com base na pontuação
 function arenaSweep() {
-    let rowCount = 1;
-    let rowsToRemove = [];
+    const rowsToRemove = [];
 
     // Identifique as linhas completas
     for (let y = arena.length - 1; y >= 0; --y) {
@@ -205,6 +205,8 @@ function arenaSweep() {
     }
 
     if (rowsToRemove.length > 0) {
+        isRemovingLines = true; // Indique que as linhas estão sendo removidas
+
         // Animação: Flash nas linhas completas
         rowsToRemove.forEach(y => {
             arena[y].fill(-1); // Use -1 para indicar que a linha está animando
@@ -214,20 +216,22 @@ function arenaSweep() {
 
         // Aguarde um pequeno tempo antes de remover todas as linhas juntas
         setTimeout(() => {
-            rowsToRemove.forEach(y => {
+            // Remova as linhas de cima para baixo
+            rowsToRemove.sort((a, b) => a - b).forEach(y => {
                 arena.splice(y, 1); // Remova a linha
                 arena.unshift(new Array(arena[0].length).fill(0)); // Adicione uma nova linha no topo
             });
 
             // Atualize a pontuação
-            player.score += rowCount * 10 * rowsToRemove.length; // Multiplica pela quantidade de linhas removidas
-            rowCount *= 2;
-
-            lineClearSound.play(); // Som de linha completa
+            player.score += rowsToRemove.length * 10; // Multiplica pela quantidade de linhas removidas
             updateScore(); // Atualize o placar
 
-            // Continue verificando até que nenhuma linha completa reste
-            arenaSweep();
+            isRemovingLines = false; // Indique que a remoção terminou
+
+            // Retome o loop de atualização se o jogo não estiver pausado
+            if (!isPaused) {
+                update();
+            }
         }, 200); // Tempo de animação (200ms)
     }
 }
@@ -309,18 +313,18 @@ function playerReset() {
 
 // Função para fazer o jogador descer
 function playerDrop() {
-    if (isPaused) return; // Não permita que o bloco caia se o jogo estiver pausado
+    if (isPaused || isRemovingLines) return; // Não permita que o bloco caia se o jogo estiver pausado ou removendo linhas
 
-    player.pos.y++;
+    player.pos.y++; // Move o bloco para baixo
     if (collide(arena, player)) {
-        player.pos.y--;
-        merge(arena, player);
+        player.pos.y--; // Reverte o movimento se houver colisão
+        merge(arena, player); // Mescla o bloco à arena
         blockHitSound.currentTime = 0; // Reinicia o som
         blockHitSound.play(); // Reproduz o som de impacto
-        arenaSweep();
-        playerReset();
+        arenaSweep(); // Inicie a remoção de linhas, se necessário
+        playerReset(); // Reinicie o jogador com um novo bloco
     }
-    dropCounter = 0;
+    dropCounter = 0; // Reseta o contador de queda
 }
 
 // Função para desenhar o jogo
@@ -343,7 +347,7 @@ function drawNextPiece() {
 
 // Função para atualizar o jogo
 function update(time = 0) {
-    if (isGameOver || isPaused) return; // Pausa o loop se o jogo estiver pausado ou em Game Over
+    if (isGameOver || isPaused || isRemovingLines) return; // Pausa o loop se o jogo estiver pausado, em Game Over ou removendo linhas
 
     const deltaTime = time - lastTime;
     lastTime = time;
