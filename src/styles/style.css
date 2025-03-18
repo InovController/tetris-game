@@ -208,7 +208,7 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Fundo semitransparente */
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
     color: #d8dee9; /* Texto claro */
     display: flex;
     flex-direction: column;
@@ -309,4 +309,21 @@ h2 {
     background: #88c0d0; /* Azul claro */
     border-radius: 50%;
     cursor: pointer;
+}
+
+/* Ajuste de texto e botões para dispositivos móveis */
+@media (max-width: 768px) {
+    h1, h2 {
+        font-size: 18px; /* Reduz o tamanho do texto */
+    }
+
+    #reset-button {
+        font-size: 16px; /* Reduz o tamanho do botão */
+        padding: 8px 16px; /* Ajusta o padding */
+    }
+
+    #instructions {
+        font-size: 12px; /* Reduz o tamanho do texto das instruções */
+        padding: 10px; /* Reduz o padding */
+    }
 }
