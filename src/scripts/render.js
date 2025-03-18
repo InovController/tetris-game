@@ -1,6 +1,6 @@
 import { arena, collide, isRemovingLines } from './arena.js';
 import { player, pieceColors, nextPiece, playerDrop, isGameOver, isPaused } from './player.js';
-import { scoreElement, canvas, context, nextCanvas, nextContext} from './dom.js'
+import { scoreElement, tetrisCanvas, context, nextCanvas, nextContext} from './dom.js'
 import { saveGameState } from './utils.js';
 
 export let lastTime = 0;
@@ -34,7 +34,7 @@ export function update(time = 0) {
 
 export function draw() {
     context.fillStyle = '#000';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillRect(0, 0, tetrisCanvas.width, tetrisCanvas.height);
 
     drawMatrix(arena, { x: 0, y: 0 });
     drawGhostPiece(); // Desenhe a peça fantasma

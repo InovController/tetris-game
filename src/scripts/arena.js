@@ -4,7 +4,11 @@ import { draw, updateScore, update } from './render.js';
 export let isRemovingLines = false;
 
 export function createMatrix(width, height) {
-    return Array.from({ length: height }, () => Array(width).fill(0));
+    const matrix = [];
+    while (height--) {
+        matrix.push(new Array(width).fill(0));
+    }
+    return matrix;
 }
 
 export const arena = createMatrix(10, 20);

@@ -1,8 +1,8 @@
 import { player } from './player.js';
 import { arena } from './arena.js';
 import { draw, drawNextPiece, updateScore } from './render.js';
-import { setIsPaused, nextPiece, setNextPiece } from './player.js';
-import { pauseOverlay } from './dom.js';
+import { setIsPaused, nextPiece, setNextPiece, isGameOver, setIsGameOver } from './player.js';
+import { pauseOverlay, finalScoreElement, gameOverElement } from './dom.js';
 
 export function saveGameState() {
     const cleanedArena = arena.map(row => row.map(value => (value === -1 ? 0 : value)));
@@ -12,6 +12,7 @@ export function saveGameState() {
         player: player,
         nextPiece: nextPiece,
         score: player.score,
+        gameover: isGameOver
     };
     localStorage.setItem('tetrisGameState', JSON.stringify(gameState));
 }
@@ -27,14 +28,22 @@ export function loadGameState() {
 
         player.pos = { ...gameState.player.pos };
         player.matrix = gameState.player.matrix;
-        player.score = gameState.score;
-        setNextPiece(gameState.nextPiece);
-
-        updateScore();
+        player.score = gameState.player.score;
+        setNextPiece(gameState.nextPiece)
         draw();
-        drawNextPiece();
+        updateScore();
+        
+        if (gameState.gameover) {
+            setIsGameOver(true);
+            finalScoreElement.innerText = player.score;
+            gameOverElement.style.display = 'block';
+            return
+        }
+        else {
+            drawNextPiece();
+            setIsPaused(true);
+            pauseOverlay.style.display = 'flex';
+        }
 
-        setIsPaused(true);
-        pauseOverlay.style.display = 'flex';
     }
 }

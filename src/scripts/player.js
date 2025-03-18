@@ -24,14 +24,16 @@ export const pieceColors = {
     7: '#bf616a', // Vermelho pastel
 };
 
-export let nextPiece = createPiece(randomPieceType());
-export function initializePlayer() {
-    nextPiece = createPiece(randomPieceType());
-    playerReset();
-}
-
+export let nextPiece;
 export function setNextPiece(piece) {
     nextPiece = piece; // ✅ Agora `nextPiece` pode ser atualizado de fora.
+}
+
+export function initializePlayer() {
+    if (!nextPiece) {
+        nextPiece = createPiece(randomPieceType());
+        playerReset();
+    }
 }
 
 export function setIsPaused(value) {
@@ -82,7 +84,7 @@ export function playerRotate(dir) {
 }
 
 export function playerDrop() {
-    if (isPaused || isRemovingLines) return;
+    if (isGameOver || isPaused || isRemovingLines) return;
 
     player.pos.y++;
     if (collide(arena, player)) {
@@ -99,11 +101,7 @@ export function playerDrop() {
 export function playerReset() {
     if (isGameOver) return;
 
-    if (!nextPiece) {
-        nextPiece = createPiece(randomPieceType());
-    }
     player.matrix = nextPiece;
-    
     nextPiece = createPiece(randomPieceType());
     player.pos.y = -getInitialYOffset(player.matrix);
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);

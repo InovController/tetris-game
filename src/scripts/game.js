@@ -4,11 +4,11 @@ import { arena } from './arena.js';
 import { loadGameState } from './utils.js';
 import { backgroundMusic, setupAudioControls } from './audio.js';
 import { setupControls } from './controls.js';
-import { gameOverElement } from './dom.js';
+import { gameOverElement, tetrisCanvas, pauseOverlay } from './dom.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    initializePlayer();
     loadGameState();
+    initializePlayer();
     backgroundMusic.play();
     setupAudioControls();
     setupControls();
@@ -26,20 +26,32 @@ export function restartGame() {
     update();
 }
 
-const pauseOverlay = document.getElementById('pause-overlay');
-const tetrisCanvas = document.getElementById('tetris');
-
-// Ajuste a posição do overlay para coincidir com o canvas
-function positionPauseOverlay() {
+function positionGameOverOverlay() {
     const canvasRect = tetrisCanvas.getBoundingClientRect();
-    pauseOverlay.style.top = `${canvasRect.top}px`;
-    pauseOverlay.style.left = `${canvasRect.left}px`;
-    pauseOverlay.style.width = `${canvasRect.width}px`;
-    pauseOverlay.style.height = `${canvasRect.height}px`;
+    const computedStyle = window.getComputedStyle(tetrisCanvas);
+    const borderWidth = parseFloat(computedStyle.borderLeftWidth) + parseFloat(computedStyle.borderRightWidth);
+    const borderHeight = parseFloat(computedStyle.borderTopWidth) + parseFloat(computedStyle.borderBottomWidth);
+
+    gameOverElement.style.top = `${canvasRect.top + 0.5 * borderHeight}px`;
+    gameOverElement.style.left = `${canvasRect.left + 0.5 * borderWidth}px`;
+    gameOverElement.style.width = `${canvasRect.width - borderWidth}px`;
+    gameOverElement.style.height = `${canvasRect.height - borderHeight}px`;
 }
 
-// Atualize a posição do overlay ao redimensionar a janela
-window.addEventListener('resize', positionPauseOverlay);
+function positionPauseOverlay() {
+    const canvasRect = tetrisCanvas.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(tetrisCanvas);
+    const borderWidth = parseFloat(computedStyle.borderLeftWidth) + parseFloat(computedStyle.borderRightWidth);
+    const borderHeigth = parseFloat(computedStyle.borderTopWidth) + parseFloat(computedStyle.borderBottomWidth);
 
-// Posicione o overlay ao carregar a página
+    pauseOverlay.style.top = `${canvasRect.top + 0.5*borderHeigth}px`;
+    pauseOverlay.style.left = `${canvasRect.left + 0.5*borderWidth}px`;
+    pauseOverlay.style.width = `${canvasRect.width - borderWidth}px`;
+    pauseOverlay.style.height = `${canvasRect.height - borderHeigth}px`;
+}
+
+window.addEventListener('resize', positionPauseOverlay);
+window.addEventListener('resize', positionGameOverOverlay);
+
+positionGameOverOverlay();
 positionPauseOverlay();

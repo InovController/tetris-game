@@ -1,23 +1,25 @@
-/* Fundo geral */
+/* Remova margens e padding do body */
 body {
-    margin: 0; /* Remove qualquer margem padrão */
-    padding: 0; /* Remove qualquer padding padrão */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     background-color: #2e3440; /* Fundo escuro e suave */
     color: #d8dee9; /* Texto claro */
     font-family: 'Poppins', Arial, sans-serif; /* Fonte moderna e relaxante */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     height: 100vh;
 }
 
-/* Título */
+/* Ajuste o título para ficar colado no topo */
 h1 {
-    margin: 0; /* Remove a margem padrão do título */
-    padding: 10px 0; /* Adicione um pequeno padding para espaçamento */
+    margin: 0;
+    padding: 20px 0 0 0; /* Adicione um pequeno padding, se necessário */
     font-size: 36px;
     color: #88c0d0; /* Azul suave */
+    text-align: center;
+    background-color: #2e3440; /* Fundo para destacar o título */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
 }
 
@@ -42,10 +44,14 @@ h1 {
     background-color: #3b4252; /* Fundo do container */
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+    padding: 10px; /* Adiciona espaçamento interno ao redor do canvas */
+    box-sizing: border-box; /* Garante que o padding não afete o tamanho total */
 }
 
-/* Canvas principal */
+/* Ajuste o canvas para ficar logo abaixo do título */
 canvas {
+    display: block;
+    margin: 0 auto; /* Centraliza horizontalmente */
     border: 2px solid #88c0d0; /* Borda azul suave */
     background-color: #2e3440; /* Fundo escuro */
     border-radius: 5px;
@@ -72,26 +78,67 @@ h2 {
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
 }
 
-/* Tela de Game Over */
+/* Tela de Game Over ajustada para o tamanho do canvas */
 #game-over {
-    font-size: 20px;
-    color: #bf616a; /* Vermelho suave */
-    text-align: center;
-    background-color: #3b4252; /* Fundo escuro */
-    padding: 20px;
-    border: 2px solid #bf616a; /* Borda vermelha */
-    border-radius: 10px;
-    display: none; /* Escondido por padrão */
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100%; /* Ajusta ao tamanho do canvas */
+    height: 100%; /* Ajusta ao tamanho do canvas */
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo semitransparente */
+    color: #bf616a; /* Vermelho suave */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 200; /* Acima de todos os outros elementos */
+    font-family: 'Poppins', Arial, sans-serif; /* Fonte relaxante */
+    text-align: center;
+    text-align: center;
+    border-radius: 5px; /* Bordas arredondadas */
+    pointer-events: none; /* Impede interação com o overlay */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para destaque */
+}
+
+#game-over h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #bf616a; /* Vermelho suave */
 }
 
 #game-over p {
     font-size: 16px;
+    color: #d8dee9; /* Texto claro */
+}
+
+/* Tela de pausa */
+#pause-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    color: #d8dee9; /* Texto claro */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 200; /* Acima de todos os outros elementos */
+    font-family: 'Poppins', Arial, sans-serif; /* Fonte relaxante */
+    text-align: center;
+    border-radius: 5px; /* Bordas arredondadas */
+}
+
+#pause-overlay h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #88c0d0; /* Azul suave */
+}
+
+#pause-overlay p {
+    font-size: 18px;
+    color: #a3be8c; /* Verde suave */
 }
 
 /* Botão de reset (se necessário) */
@@ -199,35 +246,6 @@ h2 {
     height: 100%;
     background-color: #88c0d0; /* Azul claro */
     transition: width 0.1s linear;
-}
-
-/* Tela de pausa */
-#pause-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
-    color: #d8dee9; /* Texto claro */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 200; /* Acima de todos os outros elementos */
-    font-family: 'Poppins', Arial, sans-serif; /* Fonte relaxante */
-    text-align: center;
-}
-
-#pause-overlay h2 {
-    font-size: 36px;
-    margin-bottom: 10px;
-    color: #88c0d0; /* Azul suave */
-}
-
-#pause-overlay p {
-    font-size: 18px;
-    color: #a3be8c; /* Verde suave */
 }
 
 /* Estilo para o controle de volume */
