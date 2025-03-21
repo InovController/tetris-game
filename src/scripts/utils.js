@@ -2,7 +2,7 @@ import { player } from './player.js';
 import { arena } from './arena.js';
 import { draw, drawNextPiece, updateScore } from './render.js';
 import { setIsPaused, nextPiece, setNextPiece, isGameOver, setIsGameOver } from './player.js';
-import { pauseOverlay, finalScoreElement, gameOverElement } from './dom.js';
+import { pauseOverlay, tetrisCanvas, finalScoreElement, gameOverElement } from './dom.js';
 
 export function saveGameState() {
     const cleanedArena = arena.map(row => row.map(value => (value === -1 ? 0 : value)));
@@ -47,3 +47,30 @@ export function loadGameState() {
 
     }
 }
+
+export function positionGameOverOverlay() {
+    const canvasRect = tetrisCanvas.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(tetrisCanvas);
+    const borderWidth = parseFloat(computedStyle.borderLeftWidth) + parseFloat(computedStyle.borderRightWidth);
+    const borderHeight = parseFloat(computedStyle.borderTopWidth) + parseFloat(computedStyle.borderBottomWidth);
+
+    gameOverElement.style.top = `${canvasRect.top + 0.5 * borderHeight}px`;
+    gameOverElement.style.left = `${canvasRect.left + 0.5 * borderWidth}px`;
+    gameOverElement.style.width = `${canvasRect.width - borderWidth}px`;
+    gameOverElement.style.height = `${canvasRect.height - borderHeight}px`;
+}
+
+export function positionPauseOverlay() {
+    const canvasRect = tetrisCanvas.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(tetrisCanvas);
+    const borderWidth = parseFloat(computedStyle.borderLeftWidth) + parseFloat(computedStyle.borderRightWidth);
+    const borderHeigth = parseFloat(computedStyle.borderTopWidth) + parseFloat(computedStyle.borderBottomWidth);
+
+    pauseOverlay.style.top = `${canvasRect.top + 0.5*borderHeigth}px`;
+    pauseOverlay.style.left = `${canvasRect.left + 0.5*borderWidth}px`;
+    pauseOverlay.style.width = `${canvasRect.width - borderWidth}px`;
+    pauseOverlay.style.height = `${canvasRect.height - borderHeigth}px`;
+}
+
+window.addEventListener('resize', positionPauseOverlay);
+window.addEventListener('resize', positionGameOverOverlay);

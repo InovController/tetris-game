@@ -1,5 +1,5 @@
-import { player, isPaused } from './player.js';
-import { draw, updateScore, update } from './render.js';
+import { player } from './player.js';
+import { updateScore } from './render.js';
 
 export let isRemovingLines = false;
 
@@ -37,38 +37,25 @@ export function merge(arena, player) {
 }
 
 export function arenaSweep() {
-    const rowsToRemove = [];
+    let linesCleared = 0;
 
     for (let y = arena.length - 1; y >= 0; --y) {
         if (arena[y].every(value => value !== 0)) {
-            rowsToRemove.push(y);
+            const row = arena.splice(y, 1)[0].fill(0); // Remove a linha completa
+            arena.unshift(row); // Adiciona uma nova linha no topo
+            linesCleared++;
+            y++; // Reavalie a mesma linha após o deslocamento
         }
     }
 
-    if (rowsToRemove.length > 0) {
-        isRemovingLines = true;
+    if (linesCleared > 0) {
+        // Multiplicadores de pontuação
+        const pointsPerLine = 100; // Pontos base por linha
+        const multiplier = linesCleared; // Multiplicador baseado no número de linhas
+        const pointsEarned = pointsPerLine * linesCleared * multiplier;
 
-        rowsToRemove.forEach(y => {
-            arena[y].fill(-1);
-        });
-
-        draw();
-        
-        setTimeout(() => {
-            rowsToRemove.sort((a, b) => a - b).forEach(y => {
-                arena.splice(y, 1);
-                arena.unshift(new Array(arena[0].length).fill(0));
-            });
-
-            player.score += rowsToRemove.length * 10;
-            updateScore();
-
-            isRemovingLines = false;
-
-            if (!isPaused) {
-                update();
-            }
-        }, 200);
+        player.score += pointsEarned; // Atualize a pontuação do jogador
+        updateScore(); // Atualize o placar na interface
     }
 }
 
